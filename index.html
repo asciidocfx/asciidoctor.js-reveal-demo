@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Asciidoctor.js Reveal.js Backend Example</title>
+    <style>
+        .left{
+            width: 50%;
+            float:left
+        }
+        .right{
+            width: 50%;
+            float:right
+        }
+        iframe,textarea{
+            width:99%;
+            height:500px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="left">
+<textarea id="editor" cols="30" rows="10">
+:backend: revealjs
+
+= Title
+
+== Slide 1
+
+Content 1
+</textarea>
+</div>
+
+<div class="right">
+    <iframe id="output"></iframe>
+</div>
+
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.3/jquery.js"></script>
+<script src="jade.js"></script>
+<script src="asciidoctor-all.js"></script>
+<script src="asciidoctor-reveal.js"></script>
+<script>
+     var options = Opal.hash2(['safe', 'attributes'], {
+        safe: 'safe',
+        attributes: 'showtitle icons=font@ source-highlighter=highlight.js platform=opal platform-opal env=browser env-browser idprefix idseparator=- '
+    });
+    
+    function convertSlide(){
+        var content = $("#editor").val();
+         var doc = Opal.Asciidoctor.$load(content, options);
+         var rendered = doc.$convert();
+         var iframe = document.querySelector("iframe");
+         iframe.contentWindow.document.open();
+         iframe.contentWindow.document.write(rendered);
+         iframe.contentWindow.document.close();
+    }
+
+     $("textarea").on('change keyup paste', function() {
+         convertSlide();
+     });
+     
+     convertSlide();
+</script>
+</body>
+</html>
